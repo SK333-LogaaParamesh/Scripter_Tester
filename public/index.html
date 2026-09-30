@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TestGen Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>TestGen · AI Test Studio</h1>
+  <nav><button id="nav-gen" class="on">Generate</button><button id="nav-hist">History &amp; Logs</button></nav>
+</header>
+<main>
+<section id="view-gen" class="grid">
+  <div>
+    <div class="card">
+      <h2>1 · Script</h2>
+      <div class="tabs" id="src-tabs"><button data-t="paste" class="on">Paste</button><button data-t="upload">Upload</button><button data-t="path">File path</button></div>
+      <div id="src-paste"><textarea id="code" rows="14" placeholder="Paste your script code here…" spellcheck="false"></textarea></div>
+      <div id="src-upload" class="hide"><div class="drop" id="drop">Drop a script here or click to choose<input type="file" id="file" hidden></div></div>
+      <div id="src-path" class="hide">
+        <div class="row"><input type="text" id="path" placeholder="D:\projects\app\login_test.py"><button class="btn sec" id="load-path" style="flex:0 0 auto">Load</button></div>
+        <div id="path-files" class="mute" style="margin-top:8px"></div>
+      </div>
+      <label>Script name</label><input type="text" id="name" placeholder="pasted_script">
+      <div id="loaded" class="mute" style="margin-top:6px"></div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <h2>2 · Model</h2>
+      <div class="row">
+        <div><label>Provider</label><select id="provider"></select></div>
+        <div><label>Temperature</label><input type="number" id="temp" min="0" max="1" step="0.1" value="0.2"></div>
+      </div>
+      <label>Model <span class="mute">(pick or type any)</span></label>
+      <input type="text" id="model" list="models"><datalist id="models"></datalist>
+      <label>API key <span class="mute" id="keyhint"></span></label>
+      <input type="password" id="apikey" placeholder="leave blank to use the saved key" autocomplete="off">
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <h2>3 · Focus</h2>
+      <div class="checks" id="cats"></div>
+      <div class="row">
+        <div><label>Test framework</label><select id="framework"><option value="auto">Auto-detect</option><option>pytest</option><option>unittest</option><option>Jest</option><option>Mocha</option><option>JUnit 5</option><option>NUnit</option><option>Robot Framework</option><option>Go testing</option><option>Manual (plain steps)</option></select></div>
+      </div>
+      <label class="checks" style="margin-top:12px"><span style="display:flex;gap:6px;align-items:center;color:var(--fg);font-size:13px"><input type="checkbox" id="withcode"> Also generate runnable test code</span></label>
+      <label>Extra instructions (optional)</label><textarea id="extra" rows="2" placeholder="e.g. focus on the payment retry logic; assume Postgres"></textarea>
+      <button class="btn" id="go" style="width:100%;margin-top:14px">Generate test cases</button>
+    </div>
+  </div>
+
+  <div id="out"><div class="card"><h2>How it works</h2><ol style="margin:0;padding-left:20px;line-height:1.9"><li><b>Add your script</b> - paste it, upload it, or type its file path.</li><li><b>Pick a model</b> - Grok or OpenRouter (your key is read from the saved setup).</li><li><b>Click Generate</b> - you get test cases, edge cases and risks in about a minute.</li><li><b>Download or revisit</b> - export CSV / Markdown / JSON. Every run is logged under <i>History &amp; Logs</i> with time and script details.</li></ol><p class="mute" style="margin-bottom:0">New here? Load <code>samples/sample_script.py</code> to try it.</p></div></div>
+</section>
+
+<section id="view-hist" class="hide">
+  <div class="card">
+    <div class="toolbar"><button class="btn sec sm" id="refresh">Refresh</button><a class="btn sec sm" href="/api/logs.txt" target="_blank" style="text-decoration:none">Open plain-text log</a></div>
+    <table><thead><tr><th>Time</th><th>Script</th><th>Path</th><th>Model</th><th>Tests</th><th>Edge</th><th>Tokens</th><th>Duration</th><th></th></tr></thead><tbody id="hist"></tbody></table>
+    <div id="hist-empty" class="mute hide" style="padding:16px">No runs logged yet.</div>
+  </div>
+</section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+.env
+logs/*
+!logs/.gitkeep
+*.zip
+__pycache__/
+node_modules/
